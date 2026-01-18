@@ -1,0 +1,315 @@
+--==================================================
+-- ZOY-HUB — Respect Loyalty X-Factor
+-- FULL FIX FINAL • NO LT2 • NO RLX V22
+-- By MasterLeadRLX & Zoyzii 👑🔥
+--==================================================
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
+local Camera = workspace.CurrentCamera
+
+local LP = Players.LocalPlayer
+local PG = LP:WaitForChild("PlayerGui")
+
+----------------------------------------------------
+-- 🔥 CLEAN OLD ZOY-HUB (ANTI TABRAK)
+----------------------------------------------------
+pcall(function()
+	if PG:FindFirstChild("ZOY_HUB") then
+		PG.ZOY_HUB:Destroy()
+	end
+end)
+
+----------------------------------------------------
+-- SAFE LOAD
+----------------------------------------------------
+local function safeLoad(url)
+	task.spawn(function()
+		pcall(function()
+			loadstring(game:HttpGet(url,true))()
+		end)
+	end)
+end
+
+----------------------------------------------------
+-- LOADING SCREEN (TIDAK DIUBAH)
+----------------------------------------------------
+local Loader = Instance.new("ScreenGui", PG)
+Loader.Name = "ZOY_HUB"
+
+local LBG = Instance.new("ImageLabel", Loader)
+LBG.Size = UDim2.fromScale(1,1)
+LBG.BackgroundTransparency = 1
+LBG.Image = "rbxassetid://73276197559846"
+LBG.ImageTransparency = 1
+LBG.ScaleType = Enum.ScaleType.Crop
+
+TweenService:Create(LBG,TweenInfo.new(0.8),{ImageTransparency=0}):Play()
+task.wait(1.5)
+TweenService:Create(LBG,TweenInfo.new(0.6),{ImageTransparency=1}):Play()
+task.wait(0.6)
+Loader:Destroy()
+
+----------------------------------------------------
+-- ROOT GUI (FIX PENTING)
+----------------------------------------------------
+local GUI = Instance.new("ScreenGui", PG)
+GUI.Name = "ZOY_HUB"
+GUI.ResetOnSpawn = false
+
+----------------------------------------------------
+-- CLICK SOUND
+----------------------------------------------------
+local ClickSound = Instance.new("Sound", GUI)
+ClickSound.SoundId = "rbxassetid://9118823101"
+ClickSound.Volume = 1
+local function Click() ClickSound:Play() end
+
+----------------------------------------------------
+-- TOGGLE ICON
+----------------------------------------------------
+local Toggle = Instance.new("ImageButton", GUI)
+Toggle.Size = UDim2.new(0,56,0,56)
+Toggle.Position = UDim2.new(0,20,0.5,-28)
+Toggle.BackgroundTransparency = 1
+Toggle.Image = "rbxassetid://98554706818596"
+
+do
+	local drag,start,pos
+	Toggle.InputBegan:Connect(function(i)
+		if i.UserInputType==Enum.UserInputType.MouseButton1 then
+			drag=true; start=i.Position; pos=Toggle.Position
+		end
+	end)
+	UIS.InputChanged:Connect(function(i)
+		if drag and i.UserInputType==Enum.UserInputType.MouseMovement then
+			local d=i.Position-start
+			Toggle.Position=UDim2.new(pos.X.Scale,pos.X.Offset+d.X,pos.Y.Scale,pos.Y.Offset+d.Y)
+		end
+	end)
+	UIS.InputEnded:Connect(function(i)
+		if i.UserInputType==Enum.UserInputType.MouseButton1 then drag=false end
+	end)
+end
+
+----------------------------------------------------
+-- MAIN FRAME
+----------------------------------------------------
+local Main = Instance.new("ImageLabel", GUI)
+Main.Visible = false
+Main.BackgroundTransparency = 1
+Main.Image = "rbxassetid://104456784959465"
+Main.ScaleType = Enum.ScaleType.Crop
+Instance.new("UICorner",Main).CornerRadius = UDim.new(0,18)
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Thickness = 2
+
+local function Resize()
+	local v = Camera.ViewportSize
+	local w = math.clamp(v.X*0.75,520,720)
+	local h = math.clamp(v.Y*0.72,360,460)
+	Main.Size = UDim2.new(0,w,0,h)
+	Main.Position = UDim2.new(0.5,-w/2,0.5,-h/2)
+end
+Resize()
+Camera:GetPropertyChangedSignal("ViewportSize"):Connect(Resize)
+
+RunService.RenderStepped:Connect(function()
+	Stroke.Color = Color3.fromHSV((tick()%6)/6,1,1)
+end)
+
+Toggle.MouseButton1Click:Connect(function()
+	Click()
+	Main.Visible = not Main.Visible
+end)
+
+----------------------------------------------------
+-- TOP BAR
+----------------------------------------------------
+local Top = Instance.new("Frame", Main)
+Top.Size = UDim2.new(1,0,0,42)
+Top.BackgroundColor3 = Color3.fromRGB(20,60,90)
+Instance.new("UICorner",Top).CornerRadius = UDim.new(0,18)
+
+local Title = Instance.new("TextLabel", Top)
+Title.Size = UDim2.new(1,-80,1,0)
+Title.Position = UDim2.new(0,12,0,0)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextColor3 = Color3.fromRGB(200,230,255)
+Title.Text = "ZOY-HUB — By MasterLeadRLX & Zoyzii 👑🔥"
+
+----------------------------------------------------
+-- DRAG MAIN
+----------------------------------------------------
+do
+	local drag,start,pos
+	Top.InputBegan:Connect(function(i)
+		if i.UserInputType==Enum.UserInputType.MouseButton1 then
+			drag=true; start=i.Position; pos=Main.Position
+		end
+	end)
+	UIS.InputChanged:Connect(function(i)
+		if drag and i.UserInputType==Enum.UserInputType.MouseMovement then
+			local d=i.Position-start
+			Main.Position=UDim2.new(pos.X.Scale,pos.X.Offset+d.X,pos.Y.Scale,pos.Y.Offset+d.Y)
+		end
+	end)
+	UIS.InputEnded:Connect(function(i)
+		if i.UserInputType==Enum.UserInputType.MouseButton1 then drag=false end
+	end)
+end
+
+----------------------------------------------------
+-- SIDEBAR
+----------------------------------------------------
+local Sidebar = Instance.new("Frame", Main)
+Sidebar.Size = UDim2.new(0,160,1,-42)
+Sidebar.Position = UDim2.new(0,0,0,42)
+Sidebar.BackgroundColor3 = Color3.fromRGB(20,45,70)
+Instance.new("UICorner",Sidebar).CornerRadius = UDim.new(0,14)
+
+----------------------------------------------------
+-- CONTENT SYSTEM
+----------------------------------------------------
+local Content = Instance.new("Frame", Main)
+Content.Size = UDim2.new(1,-180,1,-54)
+Content.Position = UDim2.new(0,170,0,45)
+Content.BackgroundTransparency = 1
+
+local Pages = {}
+
+local function NewPage()
+	local p = Instance.new("ScrollingFrame", Content)
+	p.Size = UDim2.new(1,0,1,0)
+	p.ScrollBarThickness = 6
+	p.BackgroundTransparency = 1
+	p.Visible = false
+
+	local list = Instance.new("UIListLayout", p)
+	list.Padding = UDim.new(0,10)
+	list:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		p.CanvasSize = UDim2.new(0,0,0,list.AbsoluteContentSize.Y + 20)
+	end)
+
+	return p
+end
+
+Pages.Home   = NewPage()
+Pages.Rules  = NewPage()
+Pages.Fish   = NewPage()
+Pages.Player = NewPage()
+
+local function Show(name)
+	for k,v in pairs(Pages) do
+		v.Visible = (k == name)
+	end
+end
+
+----------------------------------------------------
+-- TAB BUTTON
+----------------------------------------------------
+local function Tab(text,y,page)
+	local b = Instance.new("TextButton", Sidebar)
+	b.Size = UDim2.new(1,-20,0,40)
+	b.Position = UDim2.new(0,10,0,y)
+	b.Text = text
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 14
+	b.TextColor3 = Color3.fromRGB(200,230,255)
+	b.BackgroundColor3 = Color3.fromRGB(40,80,120)
+	Instance.new("UICorner",b).CornerRadius = UDim.new(0,10)
+	b.MouseButton1Click:Connect(function()
+		Click()
+		Show(page)
+	end)
+end
+
+Tab("HOME 🏠",10,"Home")
+Tab("RULES 📜",60,"Rules")
+Tab("FISH IT 🎣",110,"Fish")
+Tab("PLAYER ⚙️",160,"Player")
+
+----------------------------------------------------
+-- HOME
+----------------------------------------------------
+local h = Instance.new("TextLabel", Pages.Home)
+h.Size = UDim2.new(1,-20,0,90)
+h.BackgroundTransparency = 1
+h.TextWrapped = true
+h.Font = Enum.Font.GothamBold
+h.TextSize = 16
+h.TextColor3 = Color3.fromRGB(230,245,255)
+h.Text = "Welcome "..LP.Name.." 👑\nZOY-HUB"
+
+----------------------------------------------------
+-- RULES
+----------------------------------------------------
+local r = Instance.new("TextLabel", Pages.Rules)
+r.Size = UDim2.new(1,-20,0,180)
+r.BackgroundTransparency = 1
+r.TextWrapped = true
+r.Font = Enum.Font.Gotham
+r.TextSize = 15
+r.TextColor3 = Color3.fromRGB(230,230,230)
+r.Text = "• Gunakan dengan bijak\n• No toxic\n• Respect player lain\n\n— MasterLeadRLX & Zoyzii 👑🔥"
+
+----------------------------------------------------
+-- FISH IT
+----------------------------------------------------
+local function Fish(name,url)
+	local b = Instance.new("TextButton", Pages.Fish)
+	b.Size = UDim2.new(1,-20,0,40)
+	b.Text = name
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 14
+	b.TextColor3 = Color3.fromRGB(200,230,255)
+	b.BackgroundColor3 = Color3.fromRGB(30,70,110)
+	Instance.new("UICorner",b).CornerRadius = UDim.new(0,10)
+	b.MouseButton1Click:Connect(function()
+		Click()
+		safeLoad(url)
+	end)
+end
+
+Fish("VinzHub — Fish It","https://raw.githubusercontent.com/Vinzyy13/VinzHub/refs/heads/main/Fish-It")
+Fish("Chloe-X — Fish It","https://raw.githubusercontent.com/MajestySkie/Chloe-X/main/Main/ChloeX")
+Fish("LynxX — Fish It","https://raw.githubusercontent.com/4LynxX/Lynx/refs/heads/main/LynxxMain.lua")
+Fish("Auto Clicker","https://rawscripts.net/raw/Universal-Script-Auto-Clicker-47778")
+
+----------------------------------------------------
+-- PLAYER
+----------------------------------------------------
+local function hum()
+	return LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+end
+
+local function Btn(text,cb)
+	local b = Instance.new("TextButton", Pages.Player)
+	b.Size = UDim2.new(1,-20,0,40)
+	b.Text = text
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 14
+	b.TextColor3 = Color3.fromRGB(200,230,255)
+	b.BackgroundColor3 = Color3.fromRGB(30,70,110)
+	Instance.new("UICorner",b).CornerRadius = UDim.new(0,10)
+	b.MouseButton1Click:Connect(function()
+		Click()
+		cb()
+	end)
+end
+
+Btn("Speed +10",function() if hum() then hum().WalkSpeed += 10 end end)
+Btn("Jump +20",function() if hum() then hum().JumpPower += 20 end end)
+Btn("Rejoin",function() TeleportService:Teleport(game.PlaceId,LP) end)
+
+----------------------------------------------------
+-- START (PENTING)
+----------------------------------------------------
+Show("Home")
+print("🔥 ZOY-HUB LOADED 🔥")
